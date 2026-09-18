@@ -1,0 +1,28 @@
+{
+  "name": "zeev-portfolio-e2e",
+  "version": "1.0.0",
+  "description": "End-to-end test suite for zeeviiii.github.io, written with Playwright and the Page Object Model",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:desktop": "playwright test --project=chromium-desktop",
+    "test:mobile": "playwright test --project=mobile-safari",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "qa-automation",
+    "e2e",
+    "page-object-model",
+    "typescript"
+  ],
+  "author": "Zeev Tapoohi",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.10.0"
+  }
+}
