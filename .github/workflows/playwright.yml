@@ -37,7 +37,7 @@ jobs:
         run: npx playwright test
         env:
           CI: true
-          BASE_URL: https://zeeviiii.github.io
+          BASE_URL: https://zeevthapoohi.com
 
       - name: Upload HTML report
         uses: actions/upload-artifact@v4
