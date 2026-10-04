@@ -133,6 +133,8 @@ test.describe('Python playground — editor and runner', () => {
     await playground.search('calculator');
     await playground.programButtons.first().click();
 
+    // The source is fetched after the click, so wait for the loading line to go.
+    await expect(playground.editor).not.toHaveValue(/^# loading/);
     const code = await playground.editorContent();
     expect(code.length).toBeGreaterThan(10);
   });
@@ -146,14 +148,15 @@ test.describe('Python playground — editor and runner', () => {
     const name = (await playground.programButtons.first().innerText()).trim();
     await playground.programButtons.first().click();
 
-    const href = await playground.githubFileLink.getAttribute('href');
-    expect(href).toContain('github.com/Zeeviiii');
-    expect(href).toContain(name);
+    // The link is updated once the file has loaded, so assert with a retrying matcher.
+    await expect(playground.githubFileLink).toHaveAttribute('href', /github\.com\/Zeeviiii/);
+    await expect(playground.githubFileLink).toHaveAttribute('href', new RegExp(`${name.replace('.', '\\.')}$`));
   });
 
   test('the editor is writable', async ({ page }) => {
     const playground = new PlaygroundPage(page);
     await playground.goto();
+    await playground.settle();
 
     await playground.setEditorContent('print("hello from the suite")');
     expect(await playground.editorContent()).toBe('print("hello from the suite")');
@@ -169,6 +172,7 @@ test.describe('Python playground — editor and runner', () => {
 
     const playground = new PlaygroundPage(page);
     await playground.goto();
+    await playground.settle();
 
     await playground.setEditorContent('print(6 * 7)');
     const output = await playground.run();
@@ -181,6 +185,7 @@ test.describe('Python playground — editor and runner', () => {
 
     const playground = new PlaygroundPage(page);
     await playground.goto();
+    await playground.settle();
 
     await playground.setEditorContent('print(1 / 0)');
     const output = await playground.run();

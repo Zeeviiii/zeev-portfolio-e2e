@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { HomePage } from '../pages/HomePage';
 
+// The origin under test, so the suite follows BASE_URL instead of a hard-coded host.
+const SITE_ORIGIN = new URL(process.env.BASE_URL ?? 'https://zeevtapoohi.com').origin;
+
 /**
  * Baseline SEO, accessibility and hygiene checks — the sort of thing that
  * quietly rots on a personal site until someone points a suite at it.
@@ -108,14 +111,14 @@ test.describe('Accessibility basics', () => {
 
 test.describe('Runtime hygiene', () => {
   /**
-   * Known issue at the time of writing: the site sets a Content-Security-Policy
-   * with frame-ancestors in a <meta> tag, which browsers ignore and warn about.
-   * See FINDINGS.md. The assertion allows that one message and nothing else,
-   * so a genuinely new error still fails the build.
+   * Console messages that are allowed because they come from an upstream
+   * limit, not from the site. Everything else fails the build.
+   *
+   * FINDINGS.md #3 (frame-ancestors in a <meta> CSP) was fixed on 4 October
+   * 2026, so its allowance is gone: if that warning ever comes back, this
+   * test fails.
    */
   const KNOWN = [
-    // FINDINGS.md #3 — frame-ancestors in a <meta> CSP is ignored by browsers.
-    /frame-ancestors.*is ignored when delivered via a <meta> element/i,
     // FINDINGS.md #2 — the GitHub API is rate limited per IP; when the runner
     // is over the limit the browser reports it as a CORS failure, because the
     // 403 response carries no Access-Control-Allow-Origin header.
@@ -142,7 +145,7 @@ test.describe('Runtime hygiene', () => {
     page.on('response', (response) => {
       const url = response.url();
       // Third-party rate limits are tracked as findings, not as asset failures.
-      const isThirdParty = !url.startsWith('https://zeeviiii.github.io/');
+      const isThirdParty = !url.startsWith(SITE_ORIGIN);
       if (response.status() >= 400 && !isThirdParty) {
         failed.push(`${response.status()} ${url}`);
       }
