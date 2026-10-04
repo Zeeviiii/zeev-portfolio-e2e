@@ -33,7 +33,9 @@ export class PlaygroundPage extends BasePage {
     this.programCount = page.locator('#count');
     this.searchBox = page.locator('#fileSearch');
     this.fileList = page.locator('#files');
-    this.programButtons = page.locator('#files button');
+    // The search filter hides non-matching programs with the `hidden` attribute
+    // rather than removing them, so only visible buttons count as rendered.
+    this.programButtons = page.locator('#files button:visible');
     this.noResult = page.locator('#noResult');
     this.githubUnreachable = page.locator('#files').getByText('GitHub unreachable');
 
@@ -72,6 +74,19 @@ export class PlaygroundPage extends BasePage {
       .catch(() => undefined);
 
     return !(await this.githubUnreachable.isVisible().catch(() => false));
+  }
+
+  /**
+   * Waits until the page has finished its own start-up: the program list has
+   * loaded (or fallen back) and the first program has finished loading into
+   * the editor. Typing into the editor before this point races the auto-load —
+   * see FINDINGS.md #4.
+   */
+  async settle(): Promise<void> {
+    await this.isListAvailable();
+    await expect(this.editor).not.toHaveValue(/^# (loading|Choose)/, { timeout: 15_000 }).catch(() => {
+      /* fallback path: GitHub unreachable, the placeholder stays */
+    });
   }
 
   /** How many programs the counter claims are available. */

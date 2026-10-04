@@ -63,9 +63,9 @@ export class ContactPage extends BasePage {
   async stubSubmission(): Promise<void> {
     await this.page.route('**/*', async (route) => {
       const request = route.request();
+      // The contact form posts to Formspree; nothing else is stubbed.
       const isFormPost =
-        request.method() === 'POST' &&
-        !request.url().startsWith('https://zeeviiii.github.io/');
+        request.method() === 'POST' && request.url().includes('formspree.io');
 
       if (isFormPost) {
         await route.fulfill({
