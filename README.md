@@ -4,13 +4,13 @@
 [![Playwright](https://img.shields.io/badge/Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 
-End-to-end test suite for **[zeeviiii.github.io](https://zeeviiii.github.io)** —
+End-to-end test suite for **[ZeevTapoohi.com](https://zeevtapoohi.com)** —
 a bilingual portfolio that runs Python in the browser through Pyodide.
 
 46 tests across three browsers and a mobile viewport, written with Playwright
 and the Page Object Model, running on every push and nightly against the live
-site. The suite found three real issues; they are written up with evidence and
-suggested fixes in **[FINDINGS.md](FINDINGS.md)**.
+site. The suite found four real issues; they are written up with evidence and
+suggested fixes in **[FINDINGS.md](FINDINGS.md)**, and one of them is already fixed.
 
 ---
 

@@ -1,7 +1,7 @@
 {
   "name": "zeev-portfolio-e2e",
   "version": "1.0.0",
-  "description": "End-to-end test suite for zeeviiii.github.io, written with Playwright and the Page Object Model",
+  "description": "End-to-end test suite for zeevtapoohi.com, written with Playwright and the Page Object Model",
   "private": true,
   "type": "module",
   "scripts": {

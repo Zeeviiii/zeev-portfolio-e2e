@@ -1,7 +1,7 @@
 # Findings
 
-Issues found while building the suite against
-[zeeviiii.github.io](https://zeeviiii.github.io), with the evidence for each and
+Issues found while building the suite against my portfolio — first at
+zeeviiii.github.io, now at [zeevtapoohi.com](https://zeevtapoohi.com) — with the evidence for each and
 the test that pins it. Severity is my own judgement.
 
 ---
@@ -115,8 +115,12 @@ fallback if you like the immediacy.
 ## #3 — `frame-ancestors` in a `<meta>` CSP is ignored
 
 **Severity:** Low (security hardening, cosmetic console noise)
-**Status:** Open
-**Pinned by:** `tests/quality.spec.ts` → *Runtime hygiene* (allow-listed, so a new error still fails)
+**Status:** Fixed — 4 October 2026
+**Pinned by:** `tests/quality.spec.ts` → *Runtime hygiene* (no longer allow-listed, so the warning cannot come back unnoticed)
+
+> **Resolution:** option 1 below. `frame-ancestors` was removed from the `<meta>` CSP,
+> and the console is clean on every load. The site has since moved behind Cloudflare,
+> so option 2 is now available too if framing protection is ever needed.
 
 ### What happens
 
@@ -151,6 +155,34 @@ GitHub Pages does not let you set response headers, so there are two options:
 
 Option 1 is the honest one for a GitHub Pages site: it stops the page from
 claiming a protection it does not have.
+
+---
+
+## #4 — Code typed right after the page opens can be replaced by the first program
+
+**Severity:** Low (only in the first second or two, mostly on slower phones)
+**Status:** Open
+**Pinned by:** `pages/PlaygroundPage.ts` → `settle()`, used by the editor and runner specs
+
+### What happens
+
+When the page opens, it fetches the program list and then loads the first
+program into the editor. If a visitor starts typing (or pastes code) before
+that load finishes, their code is silently replaced by the program.
+
+### Evidence
+
+Found on 4 October 2026 by the iPhone 13 viewport project: the runner specs
+filled the editor with `print(6 * 7)` and pressed Run, but the output was the
+menu of `sterile_department.py`, which had arrived a moment later and
+overwritten the editor. On desktop the same specs passed, because the list
+loaded before the test typed.
+
+### Suggested fix
+
+Only auto-load the first program while the editor still holds the placeholder
+text (`# Choose a program from the list.`). If the visitor has already typed
+something, leave it alone.
 
 ---
 

@@ -1,10 +1,10 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright configuration for the zeeviiii.github.io end-to-end suite.
+ * Playwright configuration for the zeevtapoohi.com end-to-end suite.
  *
- * The site under test is a static, public GitHub Pages site, so there is no
- * webServer block here — tests run against the deployed URL. Override it with
+ * The site under test is a static, public site (served by Cloudflare Workers,
+ * deployed from GitHub on every push), so there is no webServer block here — tests run against the deployed URL. Override it with
  * BASE_URL when testing a branch preview or a local copy.
  */
 export default defineConfig({
@@ -28,7 +28,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: process.env.BASE_URL ?? 'https://zeeviiii.github.io',
+    baseURL: process.env.BASE_URL ?? 'https://zeevtapoohi.com',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
